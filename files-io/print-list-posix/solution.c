@@ -5,15 +5,6 @@
 #include <stdint.h>
 #include <fcntl.h>
 
-
-
-// a struct to be read and written
-struct person {
-    int id;
-    char fname[20];
-    char lname[20];
-};
-
 struct Item {
   int value;
   uint32_t next_pointer;
