@@ -1,54 +1,56 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern void normalize_path(char *path) {
-    fgets(path, sizeof(path), stdin);
-    
-    int i = 0;
-    while (*(path + i) != '\0') {
-        if (*(path + i) == ' ') continue;
-        printf("%c.", *(path + i));
-        ++i;
-    }
-    printf("\n");
+extern void normalize_path(char *path)
+{
+    char *source = path;
+    char *dest = path;
 
-    i = 0;
-    while (*(path + i) != '\0') {
-        if (*(path + i) == '.') {
-            if (*(path + i + 1) == '.') {
-                *(path + i - 1) = ' ';
-                *(path + i) = ' ';
-                *(path + i + 1) = ' ';
-                *(path + i + 2) = ' ';
-                int j = i - 1;
-                while (j > 0 && *(path + j - 1) != '/') {
-                    *(path + j - 1) = ' ';
-                    --j;
-                }
-                ++i;
-                ++i;
-                ++i;                
-            } else if (*(path + i + 1) == '/') {
-                *(path + i) = ' ';
-                *(path + i + 1) = ' ';
-                ++i;
-                ++i;
+    while (*source)
+    {
+        if (*source == '/') // adda///////ad
+        {
+            *dest++ = '/';
+            while (*source == '/')
+            {
+                source++;
             }
-        } else if (*(path + i) == '/' && *(path + i + 1) == '/') {
-            *(path + i) = ' ';
-            ++i;
-        } else {
-            ++i;
+            continue;
         }
+
+        if (*source == '.' && source[1] == '/') // daasd/./adasd
+        {
+            source++;
+            while (*source == '/')
+            {
+                source++;
+            }
+            continue;
+        }
+
+        if (*source == '.' && source[1] == '.' && source[2] == '/') // adad/../adad
+        {
+            source += 2;
+            while (*source == '/')
+            {
+                source++;
+            }
+            if (dest > path + 1)
+            {
+                dest--;
+                while (dest > path && *(dest - 1) != '/')
+                {
+                    dest--;
+                }
+            }
+            continue;
+        }
+        *dest++ = *source++;
     }
-    
-    i = 0;
-    while (*(path + i) != '\0') {
-        if (*(path + i) == ' ') continue;
-        printf("%c", *(path + i));
-        ++i;
+    if (dest > path + 1 && *(dest - 1) == '/')
+    {
+        dest--;
     }
-    printf("\n");
-    
-    return 0;
+
+    *dest = '\0';
 }
