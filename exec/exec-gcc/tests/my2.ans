@@ -1,0 +1,1 @@
+gcc -o out.out -x c - #include <stdio.h>\nint main() { printf("%d\n", %s); return 0; }\neof
